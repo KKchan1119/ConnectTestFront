@@ -25,7 +25,7 @@
   <input v-model="status" type="radio" value="학생" placeholder="학생">학생
   <input v-model="status" type="radio" value="교수" placeholder="교수">교수<br>
   <button type="button" @click="register">확인</button>
-
+  <button type="button" @click="routeInfoPage">검색페이지 이동</button>
 </template>
 
 <style>
@@ -37,6 +37,7 @@
 export default {
     data(){
       return{
+        pageNum: 1,
         userId : "",
         password : "",
         name : "",
@@ -45,15 +46,21 @@ export default {
         majorId : "",
         role : "",
         status : "",
+        resultData: null,
+        resultCode: "",
       }
     },
     created() {
     },
     inject: ['$http'],
     methods:{
+      routeInfoPage(){
+        this.$router.push({ path: '/info'});
+      },
+
       async register(){
         let data = {};
-
+        data.pageNum = this.pageNum;
         data.userId = this.userId;
         data.password = this.password;
         data.name = this.name;
@@ -64,7 +71,8 @@ export default {
         data.status = this.status;
         console.log(data);
         const registerData = await this.$http.post('/register',data);
-        console.log(registerData.data);
+        this.resultCode = registerData.data.code;
+        console.log(this.resultCode);
 
 
       },
